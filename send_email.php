@@ -1,6 +1,6 @@
 <?php
 // Replace with your email settings
-$to = "balarishith.ball.cys.com";
+$to = "balarishith.balli.cys@gmail.com";
 $subject = "website comment";
 
 $name = $_POST['name'];
