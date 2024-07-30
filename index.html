@@ -178,26 +178,39 @@
         </div>
     </section>
     
-     <section id="contact-me" class="p-5 text-center">
-        <h2>Contact Me</h2>
-        <form id="contactForm" action="/api/send_email" method="post">
-            <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="First Name" required>
+    <section id="contact-me" class="p-5 text-center">
+        <h2 class="underline">Contact Me</h2>
+        <div class="linkedin-box">
+            <div class="container">
+                <form id="contactForm" action="send_email.php" method="post">
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="surname" class="form-control" placeholder="Surname" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="comment" class="form-control" placeholder="Comment" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Send</button>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="text" name="surname" class="form-control" placeholder="Surname" required>
-            </div>
-            <div class="form-group">
-                <textarea name="comment" class="form-control" placeholder="Comment" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-secondary">Send</button>
-        </form>
-        <a href="https://www.instagram.com/rishi_.sama/" target="_blank">Instagram</a>
-        <a href="https://www.linkedin.com/in/balarishith-balli-864ab7316/" target="_blank">LinkedIn</a>
-        <a href="https://github.com/BALARISHITHBALLI" target="_blank">GitHub</a>
+            <br><br>
+            <a href="https://www.instagram.com/rishi_.sama/" target="_blank">
+                <i class="fab fa-instagram"></i> instagram
+            </a>
+            <a href="https://www.linkedin.com/in/balarishith-balli-864ab7316/" target="_blank">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://github.com/BALARISHITHBALLI" target="_blank">
+                <i class="fab fa-github"></i>github
+            </a>
+        </div>
     </section>
-
-    <script src="/js/script.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
