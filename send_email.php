@@ -1,28 +1,36 @@
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    $surname = filter_input(INPUT_POST, 'surname', FILTER_SANITIZE_STRING);
-    $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_STRING);
+// api/sendEmail.js
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    const { name, surname, comment } = req.body;
 
-    if ($name && $surname && $comment) {
-        $to = 'balli.balarishith.cys@gmail.com';
-        $subject = 'New Contact Form Submission';
-        $message = "Name: $name $surname\n\nComment:\n$comment";
-        
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/plain;charset=UTF-8" . "\r\n";
-        $headers .= 'From: <webmaster@balarishithballi.com>' . "\r\n";
-        $headers .= 'Reply-To: <webmaster@balarishithballi.com>' . "\r\n";
-
-        if (mail($to, $subject, $message, $headers)) {
-            echo 'Message sent successfully!';
-        } else {
-            echo 'Failed to send message.';
-        }
-    } else {
-        echo 'All fields are required.';
+    if (!name || !surname || !comment) {
+      return res.status(400).json({ error: 'All fields are required.' });
     }
-} else {
-    echo 'Invalid request method.';
+
+    const nodemailer = require('nodemailer');
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    let mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: 'balli.balarishith.cys@gmail.com',
+      subject: 'New Contact Form Submission',
+      text: `Name: ${name} ${surname}\n\nComment:\n${comment}`,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Message sent successfully!' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to send message.' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method not allowed.' });
+  }
 }
-?>
