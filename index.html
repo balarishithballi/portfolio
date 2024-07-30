@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balarishith Balli - Portfolio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <script src="script.js"></script>
+   
+    <nav class="floating-navbar">
+        <ul class="nav-list">
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#skills" class="nav-link">Skills</a></li>
+            <li><a href="#learning" class="nav-link">Learning</a></li>
+            <li><a href="#contact-me" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+        <h4>Hello, I'm</h4>
+        <h1 class="balarishith" href="#">Balarishith Balli</h1>
+        <h3>Fresher Security Engineer</h3>
+        <p class="center-thispara">
+            Welcome to my digital playground! I'm <span class="highlight">Balarishith Balli</span>, your friendly neighborhood security enthusiast.
+            <br>
+            Dive into my online portfolio where I mix tech with a dash of <span class="highlight">elegance</span>.
+            <br>
+            Whether you’re here to check out my <span class="highlight">coding chops</span>, my ever-growing skills, or just to see what a <span class="highlight">new security engineer</span> can do,
+            <br>
+            you’re in the right place. Think of this site as my virtual calling card—minus the awkward handshakes and boring meetings.
+            <br>
+            Enjoy the tour, and let’s make the internet a <span class="highlight">safer, and more exciting place</span>to surf <span class="highlight">together!</span>
+        </p>
+
+        <div class="mt-4">
+            <button class="btn btn-outline-dark" id="download-cv" onclick="openDocument()">Download CV</button>
+            <script>
+                function openDocument() {
+                    window.open('cv.pdf', '_blank');
+                }
+            </script>
+            <button class="btn btn-outline-dark" id="lets-talk">Let's Talk</button>
+        </div>
+    </header>
+    
+    <section id="about" class="p-5 text-center">
+        <h7>Get To Know</h7>
+        <h2 class="underline">About Me</h2>
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="icon">&#127891;</span>
+                    <p>Level: Fresher</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="icon">&#127891;</span>
+                    <p>Certificate: +5 Certificates</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="icon">&#128196;</span>
+                    <p>Projects: +1 Completed</p>
+                </div>
+            </div>
+        </div>
+        <p class="mt-4">I’m passionate about building my own company, and I’m channeling my energy into projects like a self-service student attendance tracker and a vulnerability assessment tool to get there.<br> While I find traditional classes challenging and less aligned with my ambitions, I’m committed to navigating them successfully.<br> My interests lie in AI, data analysis, and pentesting tools, and I’m constantly seeking new knowledge to help me establish a cybersecurity company.<br> In my downtime, I enjoy watching movies, learning, and developing apps.<br> One of my exciting projects is an app designed to block tracking and enhance personal security, allowing people to live without fear.</p>
+    </section>
+    
+    <section id="skills" class="p-5 text-center">
+        <h2 class="underline">My Experience</h2>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h4>Language</h4>
+                <div class="skill-box" data-skill="HTML">
+                    <img src="https://img.icons8.com/color/48/000000/html-5.png"/> HTML: Experienced
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="100">100%</div>
+                </div>
+                <div class="skill-box" data-skill="CSS">
+                    <img src="https://img.icons8.com/color/48/000000/css3.png"/> CSS: Experienced
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="100">100%</div>
+                </div>
+                <div class="skill-box" data-skill="JavaScript">
+                    <img src="https://img.icons8.com/color/48/000000/javascript.png"/> JavaScript: Basic
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="75">75%</div>
+                </div>
+                <div class="skill-box" data-skill="Python">
+                    <img src="https://img.icons8.com/color/48/000000/python.png"/> Python: Basic
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="60">60%</div>
+                </div>
+                <div class="skill-box" data-skill="C">
+                    <img src="https://img.icons8.com/color/48/000000/c-programming.png"/> C: Experienced
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="99">99%</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Technology and Tools</h4>
+                <div class="skill-box" data-skill="Nmap">
+                    <img src="https://img.icons8.com/color/48/000000/nmap.png"/> Nmap: Experienced
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="100">100%</div>
+                </div>
+                <div class="skill-box" data-skill="Wireshark">
+                    <img src="icons8-wireshark.gif"/> Wireshark: Basic
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="88">88%</div>
+                </div>
+                <div class="skill-box" data-skill="Metasploit">
+                    <img src="https://img.icons8.com/color/48/000000/metasploit.png"/> Metasploit: Basic
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="58">58%</div>
+                </div>
+                <div class="skill-box" data-skill="BurpSuite">
+                    <img src="https://img.icons8.com/ios/50/burp-suite.png"/> BurpSuite: Basic
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="70">70%</div>
+                </div>
+                <div class="skill-box" data-skill="GitHub">
+                    <img src="https://img.icons8.com/color/48/000000/github.png"/> GitHub: Experienced
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" data-value="100">100%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="learning" class="p-5 text-center">
+        <h7>What I Know</h7>
+        <h2 class="underline">Learning and Achievement</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box">
+                        <h4 style="text-decoration: underline;">Information Assurance Learning Path</h4>
+                        <ul>
+                            <li>Computer Networking</li>
+                            <li>Open Source Platform and Network Administration</li>
+                            <li>Risk Management in Information Systems</li>
+                            <li>Web Security</li>
+                            <li>Network Forensics</li>
+                            <li>Ethical Hacking and Offensive Security</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box">
+                        <h4 style="text-decoration: underline;">Research Platform</h4>
+                        <ul>
+                            <li>Windows 7, 8 and 10</li>
+                            <li>Windows Server 2012 r2</li>
+                            <li>Kali Linux</li>
+                            <li>Ubuntu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact-me" class="p-5 text-center">
+        <h2 class="underline">Contact Me</h2>
+        <div class="linkedin-box">
+            <div class="container">
+                <form id="contactForm" action="send_email.php" method="post">
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="surname" class="form-control" placeholder="Surname" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="comment" class="form-control" placeholder="Comment" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Send</button>
+                </form>
+            </div>
+            <br><br>
+            <a href="https://www.instagram.com/rishi_.sama/" target="_blank">
+                <i class="fab fa-instagram"></i> instagram
+            </a>
+            <a href="https://www.linkedin.com/in/balarishith-balli-864ab7316/" target="_blank">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://github.com/BALARISHITHBALLI" target="_blank">
+                <i class="fab fa-github"></i>github
+            </a>
+        </div>
+    </section>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
