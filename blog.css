@@ -1,0 +1,139 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Better+Together:wght@400;700&family=Naive+Inline:wght@400&family=Cherione:wght@400&display=swap');
+
+/* General Styles */
+body {
+    font-family: 'Cherione', serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    text-align: center;
+}
+
+header {
+    font-family: 'Better Together', cursive;
+    background-color: #1f1f1f;
+    color: #00e676;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+    width: 90%;
+    max-width: 900px;
+    margin: 2rem auto;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+article {
+    padding: 2rem;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #1f1f1f;
+    color: #00e676;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border-top: 1px solid #333;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Blog Post Styles */
+#blog-title {
+    font-family: 'Naive Inline', sans-serif;
+    color: #00e676;
+    margin: 0;
+    font-size: 2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+}
+
+#blog-content {
+    font-family: 'Cherione', serif;
+    color: #e0e0e0;
+    line-height: 1.8;
+    margin: 1rem 0;
+}
+
+/* Blog Images */
+.blog-image-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem; /* Space between images */
+    margin: 2rem 0;
+}
+
+.blog-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px; /* Set a maximum width for the images */
+    transition: transform 0.3s ease;
+}
+
+.blog-image:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Form Styles (if needed) */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form div {
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+label {
+    color: #00e676;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    padding: 0.75rem;
+    border: 1px solid #333;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    width: 100%;
+    border-radius: 4px;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    background-color: #00e676;
+    color: #121212;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00c853;
+}
