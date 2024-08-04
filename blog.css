@@ -137,3 +137,34 @@ button {
 button:hover {
     background-color: #00c853;
 }
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.pagination a {
+    color: #00e676;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #00e676;
+    border-radius: 4px;
+    margin: 0 0.5rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #00e676;
+    color: #121212;
+}
+
+.pagination .prev {
+    margin-right: auto;
+}
+
+.pagination .next {
+    margin-left: auto;
+}
+
