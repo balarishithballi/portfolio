@@ -13,6 +13,9 @@ body {
     min-height: 100vh;
     text-align: center;
 }
+body {
+    cursor: url('blog.cur'), auto;
+}
 
 header {
     font-family: 'Better Together', cursive;
