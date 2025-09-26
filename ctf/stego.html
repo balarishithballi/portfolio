@@ -196,7 +196,7 @@ strings -n 10 dungeon.jpg | less</pre>
         });
         const data = await res.json();
         if (data.ok) {
-          result.textContent = 'Correct flag. Well done!';
+          result.textContent = 'Correct flag. Well done!, You Started TJ...';
           result.className = 'ok';
         } else {
           result.textContent = data.message || 'Incorrect flag. Try again.';
