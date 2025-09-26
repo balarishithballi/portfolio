@@ -3,75 +3,123 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CTF – Stego Challenge</title>
-  <meta name="description" content="A small steganography challenge. Find the hidden flag in the media file." />
+  <title>CTF — Stego: The Dungeon</title>
+  <meta name="description" content="HTB-style steganography challenge. Extract the flag from the media." />
   <style>
     :root { color-scheme: light dark; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; line-height: 1.5; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; line-height: 1.55; }
     header { margin-bottom: 1.5rem; }
-    .card { border: 1px solid #8883; border-radius: 10px; padding: 1rem; margin: 1rem 0; }
-    .muted { opacity: .8; }
-    button { padding: .6rem .9rem; border-radius: 8px; border: 1px solid #8885; background: #eee; cursor: pointer; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 900px){ .grid { grid-template-columns: 2fr 1fr; } }
+    .card { border: 1px solid #8883; border-radius: 12px; padding: 1rem 1.2rem; background: #00000008; }
+    h1,h2,h3 { margin: .2rem 0 .6rem; }
+    .muted { opacity: .85; }
+    a.button, button { display: inline-block; padding: .65rem .95rem; border-radius: 10px; border: 1px solid #8886; background: #eee; color: inherit; text-decoration: none; cursor: pointer; }
     code, pre { background: #8881; padding: .15rem .35rem; border-radius: 6px; }
-    a.button { display: inline-block; margin-top: .5rem; }
-    footer { margin-top: 2rem; font-size: .95rem; }
+    input[type="text"] { width: 100%; padding: .7rem .9rem; border-radius: 10px; border: 1px solid #8886; background: transparent; color: inherit; }
+    .ok { color: #1b8f3b; }
+    .err { color: #b53a2b; }
+    .pill { display:inline-block; padding:.2rem .5rem; border:1px solid #8886; border-radius:999px; font-size:.9rem; margin-left:.5rem; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Stego Challenge</h1>
-    <p class="muted">Find the hidden flag inside the file below. Flag format: <code>CTF{...}</code></p>
+    <h1>Stego — The Dungeon <span class="pill">Easy</span></h1>
+    <p class="muted">HTB-style steganography challenge. Extract the hidden flag and submit it below. Flag format: <code>BRB{...}</code></p>
   </header>
 
-  <section class="card">
-    <h3>Story</h3>
-    <p>A friend sent a “perfect” picture from a quiet evening—yet the colors seem to whisper more than they show. Perhaps the artist left a clue in the margins.</p>
-  </section>
+  <div class="grid">
+    <main>
+      <section class="card">
+        <h3>Description</h3>
+        <p>They said the city gates were quiet, but the path into the dungeon hums with secrets. Colors linger, echoes travel, and what’s hidden isn’t far—if the senses are tuned.</p>
+        <p class="muted">No spoilers; follow the usual stego workflow. The artifact contains everything needed.</p>
+      </section>
 
-  <section class="card">
-    <h3>Download</h3>
-    <!-- Place the asset in public/ctf/assets/ on your Vercel project -->
-    <p><a class="button" href="/ctf/assets/postcard.jpg" download>Download postcard.jpg</a></p>
-    <p class="muted">Size looks normal. Nothing unusual at first glance.</p>
-  </section>
+      <section class="card">
+        <h3>Resources</h3>
+        <ul>
+          <li><a class="button" href="/ctf/assets/dungeon.jpg" download>Download dungeon.jpg</a></li>
+          <li><a class="button" href="/ctf/assets/readme.txt" download>Download readme.txt</a></li>
+          <li><a class="button" href="/ctf/assets/tools.zip" download>Download tools.zip</a></li>
+        </ul>
+        <p class="muted">Standard tools apply (metadata checks, signature checks, common stego techniques). Nothing exotic.</p>
+      </section>
 
-  <section class="card">
-    <h3>Rules</h3>
-    <ul>
-      <li>No brute-force flag guessing; extract the actual hidden content.</li>
-      <li>Standard stego and forensics tools allowed.</li>
-      <li>Flag format is exact: <code>CTF{UPPER_CASE_UNDERSCORES_OK}</code></li>
-    </ul>
-  </section>
+      <section class="card">
+        <h3>Rules</h3>
+        <ul>
+          <li>Submit the exact flag including braces: <code>BRB{...}</code>.</li>
+          <li>No brute-force guessing; extract the flag from the artifact.</li>
+          <li>One flag per submission; rate-limit may apply.</li>
+        </ul>
+      </section>
 
-  <section class="card">
-    <h3>Getting started</h3>
-    <p class="muted">Typical workflow: check metadata and file type, then try common stego techniques/tools.</p>
-    <pre>
-exiftool postcard.jpg
-strings -n 8 postcard.jpg | less
-file postcard.jpg
-    </pre>
-  </section>
+      <section class="card">
+        <h3>Submit Flag</h3>
+        <form id="flag-form">
+          <label for="flag" class="muted">Flag</label>
+          <input id="flag" name="flag" type="text" placeholder="BRB{...}" autocomplete="off" required />
+          <div style="margin-top:.7rem;">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+        <p id="result" class="muted"></p>
+      </section>
+    </main>
 
-  <section class="card">
-    <h3>Hint</h3>
-    <p id="hint" style="display:none;">The “artist” nearly said it aloud. When the word clicks, the rest follows.</p>
-    <p id="hint-locked" class="muted">Hint unlocks in ~90s to keep it fair.</p>
-    <button id="reveal" style="display:none;">Show hint now</button>
-  </section>
+    <aside>
+      <section class="card">
+        <h3>Hint</h3>
+        <p id="hint" class="muted" style="display:none;">Listen with more than eyes; what’s written may ride the lows.</p>
+        <button id="unlock" style="display:none;">Show hint</button>
+        <p id="timer" class="muted">Hint unlocks in ~90s.</p>
+      </section>
 
-  <footer class="muted">
-    <p>Made by Balarishith. Respect bandwidth and be kind to the server.</p>
-  </footer>
+      <section class="card">
+        <h3>Getting started</h3>
+        <pre>file dungeon.jpg
+exiftool dungeon.jpg
+strings -n 10 dungeon.jpg | less</pre>
+        <p class="muted">Then try common stego approaches appropriate to the format.</p>
+      </section>
+    </aside>
+  </div>
 
   <script>
-    // Unlock hint after 90s (and allow manual reveal afterwards)
+    // Timed hint unlock (90s)
     const hint = document.getElementById('hint');
-    const locked = document.getElementById('hint-locked');
-    const btn = document.getElementById('reveal');
-    setTimeout(() => { locked.style.display='none'; btn.style.display='inline-block'; }, 90000);
-    btn.addEventListener('click', () => { hint.style.display='block'; btn.style.display='none'; });
+    const unlock = document.getElementById('unlock');
+    const timer = document.getElementById('timer');
+    setTimeout(() => { timer.style.display='none'; unlock.style.display='inline-block'; }, 90000);
+    unlock.addEventListener('click', () => { hint.style.display='block'; unlock.style.display='none'; });
+
+    // Submit handler
+    const form = document.getElementById('flag-form');
+    const result = document.getElementById('result');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      result.textContent = 'Checking...';
+      const flag = document.getElementById('flag').value.trim();
+      try {
+        const res = await fetch('/api/submit-flag', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ flag })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          result.textContent = 'Correct flag. Well done!';
+          result.className = 'ok';
+        } else {
+          result.textContent = data.message || 'Incorrect flag. Try again.';
+          result.className = 'err';
+        }
+      } catch {
+        result.textContent = 'Submission error. Please retry.';
+        result.className = 'err';
+      }
+    });
   </script>
 </body>
 </html>
