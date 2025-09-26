@@ -9,102 +9,31 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0b0f17;
-      --card: #111827;
-      --ink: #e5e7eb;
-      --muted: #9ca3af;
-      --acc: #7c3aed;
-      --acc2: #22d3ee;
-      --ok: #22c55e;
-      --err: #ef4444;
-      color-scheme: dark;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background:
-        radial-gradient(1200px 600px at 10% -10%, #0d1b2a 10%, transparent 60%),
-        radial-gradient(1000px 700px at 110% 10%, #1b103a 10%, transparent 60%),
-        linear-gradient(180deg, #06080d 0%, var(--bg) 60%, #080a12 100%);
-      color: var(--ink);
-      min-height: 100vh;
-    }
-    header {
-      padding: 48px 20px 20px;
-      text-align: center;
-    }
-    .title {
-      font-size: 2.25rem;
-      font-weight: 800;
-      letter-spacing: .3px;
-      margin: 0 0 8px;
-      background: linear-gradient(90deg, var(--acc), var(--acc2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .subtitle { color: var(--muted); margin: 0; }
-    .pill {
-      display: inline-block; margin-left: .5rem; padding: .25rem .6rem;
-      border: 1px solid #ffffff22; border-radius: 999px; color: var(--muted); font-size: .9rem;
-      backdrop-filter: blur(6px);
-    }
-    .wrap { max-width: 1100px; margin: 24px auto 60px; padding: 0 20px; }
-    .grid {
-      display: grid; gap: 18px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 980px) {
-      .grid { grid-template-columns: 1.3fr .7fr; }
-    }
-    .card {
-      background: linear-gradient(180deg, #0f172a 0%, var(--card) 100%);
-      border: 1px solid #ffffff12;
-      border-radius: 16px; padding: 18px 18px;
-      box-shadow: 0 10px 40px #00000055 inset, 0 14px 40px #00000055;
-    }
-    h3 { margin: 4px 0 10px; font-weight: 700; }
-    p { margin: 8px 0; }
-    .muted { color: var(--muted); }
-    .buttons a, .buttons button {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: .75rem 1rem; margin: .25rem .25rem .25rem 0;
-      border-radius: 12px; border: 1px solid #ffffff22; text-decoration: none; color: var(--ink);
-      background: linear-gradient(180deg,#1f2937 0%, #111827 100%);
-      transition: transform .1s ease, box-shadow .2s ease, border-color .2s;
-      box-shadow: 0 10px 24px #00000066;
-      cursor: pointer;
-    }
-    .buttons a:hover, .buttons button:hover { transform: translateY(-1px); border-color: #ffffff44; }
-    code, pre {
-      background: #0b1220; color: #d1d5db; border: 1px solid #ffffff14;
-      padding: .5rem .7rem; border-radius: 10px; overflow: auto;
-    }
-    input[type="text"] {
-      width: 100%; padding: .8rem 1rem; border-radius: 12px;
-      border: 1px solid #ffffff22; background: #0b1220; color: var(--ink);
-      outline: none;
-    }
-    input[type="text"]:focus { border-color: #ffffff44; }
-    .cta {
-      padding: .8rem 1.1rem; border-radius: 12px; border: 1px solid #ffffff22;
-      background: linear-gradient(90deg, var(--acc), var(--acc2)); color: #0b0f17; font-weight: 700;
-      cursor: pointer; box-shadow: 0 10px 28px #00000088;
-    }
-    .ok { color: var(--ok); }
-    .err { color: var(--err); }
-    footer { text-align: center; color: var(--muted); padding: 28px 0 48px; }
-    .glow {
-      position: relative; isolation: isolate;
-    }
-    .glow::before {
-      content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: 18px;
-      background: radial-gradient(120px 60px at 10% 10%, #7c3aed33, transparent 60%),
-                  radial-gradient(140px 60px at 90% 10%, #22d3ee33, transparent 60%);
-      filter: blur(24px);
-    }
+    :root{--bg:#0b0f17;--card:#111827;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7c3aed;--acc2:#22d3ee;--ok:#22c55e;--err:#ef4444;color-scheme:dark}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(1200px 600px at 10% -10%,#0d1b2a 10%,transparent 60%),radial-gradient(1000px 700px at 110% 10%,#1b103a 10%,transparent 60%),linear-gradient(180deg,#06080d 0%,var(--bg) 60%,#080a12 100%);color:var(--ink);min-height:100vh}
+    header{padding:48px 20px 20px;text-align:center}
+    .title{font-size:2.25rem;font-weight:800;letter-spacing:.3px;margin:0 0 8px;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .subtitle{color:var(--muted);margin:0}
+    .pill{display:inline-block;margin-left:.5rem;padding:.25rem .6rem;border:1px solid #ffffff22;border-radius:999px;color:var(--muted);font-size:.9rem;backdrop-filter:blur(6px)}
+    .wrap{max-width:1100px;margin:24px auto 60px;padding:0 20px}
+    .grid{display:grid;gap:18px;grid-template-columns:1fr}
+    @media (min-width:980px){.grid{grid-template-columns:1.3fr .7fr}}
+    .card{background:linear-gradient(180deg,#0f172a 0%,var(--card) 100%);border:1px solid #ffffff12;border-radius:16px;padding:18px 18px;box-shadow:0 10px 40px #00000055 inset,0 14px 40px #00000055}
+    h3{margin:4px 0 10px;font-weight:700}
+    p{margin:8px 0}
+    .muted{color:var(--muted)}
+    .buttons a,.buttons button{display:inline-flex;align-items:center;gap:10px;padding:.75rem 1rem;margin:.25rem .25rem .25rem 0;border-radius:12px;border:1px solid #ffffff22;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,#1f2937 0%,#111827 100%);transition:transform .1s ease,box-shadow .2s ease,border-color .2s;box-shadow:0 10px 24px #00000066;cursor:pointer}
+    .buttons a:hover,.buttons button:hover{transform:translateY(-1px);border-color:#ffffff44}
+    code,pre{background:#0b1220;color:#d1d5db;border:1px solid #ffffff14;padding:.5rem .7rem;border-radius:10px;overflow:auto}
+    input[type="text"]{width:100%;padding:.8rem 1rem;border-radius:12px;border:1px solid #ffffff22;background:#0b1220;color:var(--ink);outline:none}
+    input[type="text"]:focus{border-color:#ffffff44}
+    .cta{padding:.8rem 1.1rem;border-radius:12px;border:1px solid #ffffff22;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#0b0f17;font-weight:700;cursor:pointer;box-shadow:0 10px 28px #00000088}
+    .ok{color:var(--ok)}
+    .err{color:var(--err)}
+    footer{text-align:center;color:var(--muted);padding:28px 0 48px}
+    .glow{position:relative;isolation:isolate}
+    .glow::before{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:18px;background:radial-gradient(120px 60px at 10% 10%,#7c3aed33,transparent 60%),radial-gradient(140px 60px at 90% 10%,#22d3ee33,transparent 60%);filter:blur(24px)}
   </style>
 </head>
 <body>
@@ -124,8 +53,8 @@
       <section class="card glow">
         <h3>Resources</h3>
         <div class="buttons">
-          <a href="/ctf/assets/dungeon.png" download>Download dungeon.jpg</a>
-          <a href="/ctf/assets/readme.txt" download>Download readme.txt</a>
+          <a href="/ctf/assets/dungeon.png" download="dungeon.png">Download dungeon.png</a>
+          <a href="/ctf/assets/readme.txt" download="readme.txt">Download readme.txt</a>
         </div>
         <p class="muted">Use common checks first (file type, metadata, strings), then proceed with familiar stego techniques for this format.</p>
       </section>
@@ -146,7 +75,7 @@
             <button class="cta" type="submit">Submit</button>
           </div>
         </form>
-        <p id="result" class="muted" role="status" aria-live="polite"></p>
+        <p id="result" class="muted" role="status" aria-live="polite" aria-atomic="true"></p>
       </section>
     </main>
 
@@ -160,9 +89,9 @@
 
       <section class="card glow">
         <h3>Getting started</h3>
-        <pre>file dungeon.jpg
-exiftool dungeon.jpg
-strings -n 10 dungeon.jpg | less</pre>
+        <pre>file dungeon.png
+exiftool dungeon.png
+strings -n 10 dungeon.png | less</pre>
         <p class="muted">Then try the usual technique suitable for this format.</p>
       </section>
     </aside>
@@ -173,40 +102,8 @@ strings -n 10 dungeon.jpg | less</pre>
   </footer>
 
   <script>
-    // Hint unlock after 90s
-    const hint = document.getElementById('hint');
-    const unlock = document.getElementById('unlock');
-    const timer = document.getElementById('timer');
-    setTimeout(() => { timer.style.display='none'; unlock.style.display='inline-block'; }, 90000);
-    unlock?.addEventListener('click', () => { hint.style.display='block'; unlock.style.display='none'; });
-
-    // Submit handler
-    const form = document.getElementById('flag-form');
-    const result = document.getElementById('result');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      result.textContent = 'Checking...';
-      result.className = 'muted';
-      const flag = document.getElementById('flag').value.trim();
-      try {
-        const res = await fetch('/api/submit-flag', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ flag })
-        });
-        const data = await res.json();
-        if (data.ok) {
-          result.textContent = 'Correct flag. Well done!, You Started TJ...';
-          result.className = 'ok';
-        } else {
-          result.textContent = data.message || 'Incorrect flag. Try again.';
-          result.className = 'err';
-        }
-      } catch {
-        result.textContent = 'Submission error. Please retry.';
-        result.className = 'err';
-      }
-    });
+    const hint=document.getElementById('hint');const unlock=document.getElementById('unlock');const timer=document.getElementById('timer');setTimeout(()=>{timer.style.display='none';unlock.style.display='inline-block';},90000);unlock?.addEventListener('click',()=>{hint.style.display='block';unlock.style.display='none';});
+    const form=document.getElementById('flag-form');const result=document.getElementById('result');form.addEventListener('submit',async(e)=>{e.preventDefault();result.textContent='Checking...';result.className='muted';const flag=document.getElementById('flag').value.trim();try{const res=await fetch('/api/submit-flag',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flag})});const data=await res.json();if(data.ok===true){result.textContent='Correct flag. Well done!';result.className='ok';}else{result.textContent=data.message||'Incorrect flag. Try again.';result.className='err';}}catch{result.textContent='Submission error. Please retry.';result.className='err';}});
   </script>
 </body>
 </html>
