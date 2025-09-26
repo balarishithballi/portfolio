@@ -101,8 +101,49 @@ OR Try using LSB steganography</pre>
   </footer>
 
   <script>
-    const hint=document.getElementById('hint');const unlock=document.getElementById('unlock');const timer=document.getElementById('timer');setTimeout(()=>{timer.style.display='none';unlock.style.display='inline-block';},90000);unlock?.addEventListener('click',()=>{hint.style.display='block';unlock.style.display='none';});
-    const form=document.getElementById('flag-form');const result=document.getElementById('result');form.addEventListener('submit',async(e)=>{e.preventDefault();result.textContent='Checking...';result.className='muted';const flag=document.getElementById('flag').value.trim();try{const res=await fetch('/api/submit-flag',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({flag})});const data=await res.json();if(data.ok===true){result.textContent='Correct flag. Well done!, you have the key to enter the dungeon, stay tuned for more exciting challanges!';result.className='ok';}else{result.textContent=data.message||'Incorrect flag. Try again.';result.className='err';}}catch{result.textContent='Submission error. Please retry.';result.className='err';}});
+    const hint=document.getElementById('hint');
+    const unlock=document.getElementById('unlock');
+    const timer=document.getElementById('timer');
+    setTimeout(()=>{
+      timer.style.display='none';
+      unlock.style.display='inline-block';
+    },90000);
+    unlock?.addEventListener('click',()=>{
+      hint.style.display='block';
+      unlock.style.display='none';
+    });
+
+    const form=document.getElementById('flag-form');
+    const result=document.getElementById('result');
+    form.addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      result.textContent='Checking...';
+      result.className='muted';
+      const flag=document.getElementById('flag').value.trim();
+      try{
+        const res=await fetch('/api/submit-flag',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({flag})
+        });
+        const data=await res.json();
+        if(data.ok===true){
+          result.innerHTML = `
+            <span class="ok">Correct flag. Well done! You have the key to enter the dungeon.</span><br><br>
+            <a href="https://discord.gg/SAa8G7rs" target="_blank" class="buttons" style="margin-top:10px;display:inline-block;">
+              👉 Join the Dungeon Discord
+            </a><br><br>
+            <span class="muted">Submit the flag using <code>/flag ${flag}</code> in Discord to join the DUNGEON.</span>
+          `;
+        }else{
+          result.textContent=data.message||'Incorrect flag. Try again.';
+          result.className='err';
+        }
+      }catch{
+        result.textContent='Submission error. Please retry.';
+        result.className='err';
+      }
+    });
   </script>
 </body>
 </html>
