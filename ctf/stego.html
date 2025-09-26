@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CTF – Stego Challenge</title>
+  <meta name="description" content="A small steganography challenge. Find the hidden flag in the media file." />
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; line-height: 1.5; }
+    header { margin-bottom: 1.5rem; }
+    .card { border: 1px solid #8883; border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+    .muted { opacity: .8; }
+    button { padding: .6rem .9rem; border-radius: 8px; border: 1px solid #8885; background: #eee; cursor: pointer; }
+    code, pre { background: #8881; padding: .15rem .35rem; border-radius: 6px; }
+    a.button { display: inline-block; margin-top: .5rem; }
+    footer { margin-top: 2rem; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Stego Challenge</h1>
+    <p class="muted">Find the hidden flag inside the file below. Flag format: <code>CTF{...}</code></p>
+  </header>
+
+  <section class="card">
+    <h3>Story</h3>
+    <p>A friend sent a “perfect” picture from a quiet evening—yet the colors seem to whisper more than they show. Perhaps the artist left a clue in the margins.</p>
+  </section>
+
+  <section class="card">
+    <h3>Download</h3>
+    <!-- Place the asset in public/ctf/assets/ on your Vercel project -->
+    <p><a class="button" href="/ctf/assets/postcard.jpg" download>Download postcard.jpg</a></p>
+    <p class="muted">Size looks normal. Nothing unusual at first glance.</p>
+  </section>
+
+  <section class="card">
+    <h3>Rules</h3>
+    <ul>
+      <li>No brute-force flag guessing; extract the actual hidden content.</li>
+      <li>Standard stego and forensics tools allowed.</li>
+      <li>Flag format is exact: <code>CTF{UPPER_CASE_UNDERSCORES_OK}</code></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h3>Getting started</h3>
+    <p class="muted">Typical workflow: check metadata and file type, then try common stego techniques/tools.</p>
+    <pre>
+exiftool postcard.jpg
+strings -n 8 postcard.jpg | less
+file postcard.jpg
+    </pre>
+  </section>
+
+  <section class="card">
+    <h3>Hint</h3>
+    <p id="hint" style="display:none;">The “artist” nearly said it aloud. When the word clicks, the rest follows.</p>
+    <p id="hint-locked" class="muted">Hint unlocks in ~90s to keep it fair.</p>
+    <button id="reveal" style="display:none;">Show hint now</button>
+  </section>
+
+  <footer class="muted">
+    <p>Made by Balarishith. Respect bandwidth and be kind to the server.</p>
+  </footer>
+
+  <script>
+    // Unlock hint after 90s (and allow manual reveal afterwards)
+    const hint = document.getElementById('hint');
+    const locked = document.getElementById('hint-locked');
+    const btn = document.getElementById('reveal');
+    setTimeout(() => { locked.style.display='none'; btn.style.display='inline-block'; }, 90000);
+    btn.addEventListener('click', () => { hint.style.display='block'; btn.style.display='none'; });
+  </script>
+</body>
+</html>
