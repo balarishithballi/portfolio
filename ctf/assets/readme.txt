@@ -29,4 +29,5 @@ Final note:
 The dungeon holds an exciting gift for those who notice what others overlook.
 
 There are no clues in this file.
-
+hint for the passphrase is: Too much input can crash the party 
+NOTE: the passphrase is all smalls no spaces!
