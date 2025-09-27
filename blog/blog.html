@@ -3,100 +3,221 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>my blog/page1</title>
-  <link rel="stylesheet" href="blog.css" />
+  <title>Cyber Daily — Live Blog</title>
   <style>
-    body { cursor: url(http://www.rw-designer.com/cursor-extern.php?id=5148), auto; }
+    :root{
+      --bg:#0b0f14; --panel:#0f1624cc; --glass:rgba(20,30,50,0.35);
+      --neon:#00ffc3; --neon2:#7a5cff; --accent:#18ff6d; --text:#d7e1ec;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0; background:#0b0f14; color:var(--text);
+      font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; overflow-x:hidden}
+    /* Scanlines + grid */
+    body::before{content:""; position:fixed; inset:0; pointer-events:none;
+      background:repeating-linear-gradient(180deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px); mix-blend-mode:overlay}
+    #grid-canvas{position:fixed; inset:0; z-index:0; opacity:.12}
+    /* Glass containers */
+    .glass{background:var(--glass); backdrop-filter: blur(12px) saturate(120%);
+      -webkit-backdrop-filter: blur(12px) saturate(120%); border:1px solid rgba(0,255,200,.25); border-radius:14px}
+    .wrapper{max-width:1100px; margin:22px auto 40px; padding:0 16px; position:relative; z-index:1}
+    .hero{padding:22px 16px; text-align:center; margin-bottom:16px}
+    .deck{opacity:.9; margin:8px auto 0; max-width:780px}
+    /* Glitch title */
+    .neon-glitch{display:inline-block; font-weight:800; font-size:clamp(32px,6.8vw,78px);
+      color:#e9fffb; text-shadow:0 0 10px var(--neon), 0 0 30px var(--neon); position:relative; letter-spacing:.03em}
+    .neon-glitch::before,.neon-glitch::after{content:attr(data-text); position:absolute; left:0; top:0; width:100%}
+    .neon-glitch::before{left:2px; text-shadow:-2px 0 var(--neon2);
+      clip-path:polygon(0 2%,100% 0,100% 40%,0 38%); animation:glTop 3s infinite linear alternate}
+    .neon-glitch::after{left:-2px; text-shadow:2px 0 var(--accent);
+      clip-path:polygon(0 62%,100% 60%,100% 100%,0 100%); animation:glBot 3.4s infinite linear alternate}
+    @keyframes glTop{0%{transform:translate(0,0)}50%{transform:translate(1px,-1px)}100%{transform:translate(-1px,1px)}}
+    @keyframes glBot{0%{transform:translate(0,0)}50%{transform:translate(-1px,1px)}100%{transform:translate(1px,-1px)}}
+    /* Ticker */
+    .ticker{margin:12px auto 0; display:flex; align-items:center; gap:12px; padding:10px 14px; position:sticky; top:10px; z-index:5}
+    .ticker .label{color:var(--neon); font-weight:700; text-transform:uppercase; letter-spacing:.08em}
+    .ticker .track{overflow:hidden; white-space:nowrap; flex:1; position:relative}
+    .ticker .row{display:inline-block; padding-left:100%; animation:scroll 28s linear infinite}
+    .ticker a{color:var(--text); text-decoration:none; margin:0 18px}
+    .ticker a:hover{color:var(--neon)}
+    @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-100%)}}
+    /* Grid layout */
+    .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:24px; margin-top:16px}
+    @media (max-width:960px){.grid{grid-template-columns:1fr}}
+    .card{padding:22px}
+    h2{margin-top:0; font-family:"Orbitron", system-ui, sans-serif; text-shadow:0 0 10px rgba(122,92,255,.6)}
+    .list{list-style:none; margin:0; padding:0}
+    .item{margin:8px 0; padding:10px 12px; border:1px solid rgba(255,255,255,.08); border-radius:10px; background:rgba(10,20,30,.25)}
+    .item a{color:var(--neon); text-decoration:none}
+    .meta{font-size:12px; opacity:.75}
+    .footer{margin:26px auto 40px; padding:16px; text-align:center}
+    a:focus,button:focus{outline:2px solid var(--neon2); outline-offset:2px}
   </style>
 </head>
-<body class="cyber-bg">
+<body>
   <canvas id="grid-canvas" aria-hidden="true"></canvas>
 
-  <header class="blog-hero">
-    <h1 class="neon-glitch" data-text="My Blog">My Blog</h1>
-    <div class="ticker glass">
-      <span class="label">Daily Cyber Brief</span>
-      <div id="ticker-track" class="track" aria-live="polite"></div>
-    </div>
-  </header>
-
-  <main class="container">
-    <article id="blog-post" class="glass card">
-      <h2>My Journey and Achievements</h2>
-
-      <section>
-        <h3>Early Beginnings</h3>
-        <p>
-          From a young age, I was fascinated by technology. My curiosity led me to explore various aspects of computer science, from programming to cybersecurity. What started as a hobby quickly evolved into a full-fledged passion.
-        </p>
-      </section>
-
-      <section>
-        <h3>Educational Milestones</h3>
-
-        <h4>1. Pursuing a Degree in Computer Applications</h4>
-        <p>
-          I embarked on my formal educational journey by pursuing a Bachelor of Computer Applications (BCA). Throughout my studies, I focused on gaining a comprehensive understanding of computer systems, programming languages, and network security. Each module and project was a stepping stone towards my goal of becoming a cybersecurity expert.
-        </p>
-
-        <h4>2. Achieving Excellence in Ethical Hacking</h4>
-        <p>
-          During my BCA, I excelled in my ethical hacking course, scoring 100% in the introduction module. This achievement fueled my determination to delve deeper into cybersecurity and explore its various facets, including footprinting, reconnaissance, and vulnerability assessment.
-        </p>
-      </section>
-
-      <section>
-        <h3>Noteworthy Projects</h3>
-
-        <h4>1. Self-Service Student Attendance Tracking Web App</h4>
-        <p>
-          One of my significant projects was developing a self-service student attendance tracking web app. This project involved creating a user-friendly interface, implementing secure login systems, and integrating advanced features like AI-powered predictive alerts. The experience honed my skills in web development and data security.
-        </p>
-
-        <h4>2. Vulnerability Assessment and Penetration Testing Tool</h4>
-        <p>
-          Another milestone was the development of a Python application for vulnerability assessment and penetration testing. This tool is designed to conduct thorough assessments of websites, identify potential vulnerabilities, and generate detailed reports. It was a challenging yet rewarding project that showcased my expertise in cybersecurity.
-        </p>
-      </section>
-
-      <section>
-        <h3>Looking Ahead</h3>
-        <p>
-          As I continue my journey, my primary goal is to establish my own cybersecurity company. I am committed to staying ahead of industry trends, learning new technologies, and contributing to the field of cybersecurity. My passion for AI, data analysis, and pentesting tools drives me to innovate and excel.
-        </p>
-      </section>
-
-      <section>
-        <h3>Acknowledgments</h3>
-        <p>
-          I am grateful for the support of my mentors, peers, and family who have encouraged me throughout this journey. Their guidance and belief in my abilities have been instrumental in achieving my goals.
-        </p>
-      </section>
-
-      <section>
-        <p>
-          Thank you for joining me on this adventure. Stay tuned for more updates, insights, and stories about my journey in the world of technology and cybersecurity!
-        </p>
-      </section>
-
-      <div class="pagination">
-        <a href="page2.html" class="next">Next &raquo;</a>
+  <div class="wrapper">
+    <header class="hero glass">
+      <h1 class="neon-glitch" data-text="Cyber Daily">Cyber Daily</h1>
+      <p class="deck">Auto-updating cybersecurity headlines, advisories, and key stories — refreshed every 30 minutes.</p>
+      <div class="ticker glass">
+        <span class="label">Live Ticker</span>
+        <div id="ticker-track" class="track" aria-live="polite"></div>
       </div>
-    </article>
+    </header>
 
-    <aside class="glass card headlines">
-      <h2>Today’s Headlines</h2>
-      <ul id="headlines-list" class="headline-list"></ul>
-      <div class="feed-credits">
-        Sources: The Hacker News, CISA Advisories, SecurityWeek, CyberWire
-      </div>
-    </aside>
-  </main>
+    <section class="grid">
+      <article class="glass card">
+        <h2>Latest Headlines</h2>
+        <ul id="headlines-list" class="list"></ul>
+      </article>
 
-  <footer class="footer glass">
-    <p>Created by BALARISHITH.BALLI</p>
-  </footer>
+      <aside class="glass card">
+        <h2>Advisories & Alerts</h2>
+        <ul id="advisories-list" class="list"></ul>
+      </aside>
+    </section>
 
-  <script src="blog.js"></script>
+    <footer class="glass footer">
+      <span>Created by BALARISHITH.BALLI • Sources: The Hacker News, CISA, SecurityWeek, CyberWire</span>
+    </footer>
+  </div>
+
+  <script>
+    // ===== Config: RSS feeds through RSS->JSON services =====
+    // Public services can rate-limit. For production, use a serverless proxy or NewsAPI/NVD backend.
+    const RSS_TO_JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+    const SOURCES = {
+      headlines: [
+        RSS_TO_JSON + encodeURIComponent('https://feeds.feedburner.com/TheHackersNews'), // The Hacker News
+        RSS_TO_JSON + encodeURIComponent('https://www.securityweek.com/feed/'),         // SecurityWeek
+        RSS_TO_JSON + encodeURIComponent('https://www.cyberwire.com/podcasts/daily-podcast.xml') // CyberWire daily
+      ],
+      advisories: [
+        RSS_TO_JSON + encodeURIComponent('https://www.cisa.gov/cybersecurity-advisories.xml') // CISA advisories
+      ]
+    };
+
+    const REFRESH_MS = 30 * 60 * 1000; // 30 minutes
+    const MAX_HEADLINES = 20;
+    const MAX_ADVISORIES = 15;
+    const TICKER_ITEMS = 12;
+
+    // ===== Utilities =====
+    const sanitize = s => (s || '').replace(/<[^>]*>/g, '').trim();
+    function pick(item){
+      const title = sanitize(item.title || item.name);
+      const link = item.link || item.url || '#';
+      const source = sanitize(item.author || item.feed?.title || item.source?.name || 'Feed');
+      const date = item.pubDate || item.publishedAt || item.updated || item.isoDate || '';
+      return { title, link, source, date };
+    }
+    function relativeTime(ts){
+      try{
+        const d = new Date(ts);
+        const diff = (Date.now() - d.getTime())/1000;
+        if(diff < 60) return 'just now';
+        if(diff < 3600) return Math.floor(diff/60)+'m ago';
+        if(diff < 86400) return Math.floor(diff/3600)+'h ago';
+        return d.toLocaleDateString();
+      }catch{ return ''; }
+    }
+
+    // ===== Fetch helpers =====
+    async function fetchFeed(url){
+      const r = await fetch(url, { cache: 'no-store' });
+      if(!r.ok) throw new Error('feed '+r.status);
+      return r.json();
+    }
+    async function loadGroup(urls){
+      const out = [];
+      const res = await Promise.allSettled(urls.map(fetchFeed));
+      res.forEach(x=>{
+        if(x.status === 'fulfilled'){
+          const items = x.value.items || [];
+          items.forEach(it => out.push(pick(it)));
+        }
+      });
+      // de-duplicate by title
+      const seen = new Set();
+      const unique = out.filter(h=>{
+        const k = h.title.toLowerCase();
+        if(seen.has(k)) return false;
+        seen.add(k); return true;
+      });
+      // sort desc by date
+      unique.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
+      return unique;
+    }
+
+    // ===== Renderers =====
+    function renderList(elId, items, limit){
+      const el = document.getElementById(elId);
+      if(!el) return;
+      el.innerHTML = '';
+      items.slice(0,limit).forEach(h=>{
+        const li = document.createElement('li');
+        li.className = 'item';
+        li.innerHTML = \`
+          <a href="\${h.link}" target="_blank" rel="noopener">\${h.title}</a>
+          <div class="meta">\${h.source} • \${relativeTime(h.date)}</div>
+        \`;
+        el.appendChild(li);
+      });
+    }
+    function renderTicker(items){
+      const track = document.getElementById('ticker-track');
+      if(!track) return;
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = items.slice(0,TICKER_ITEMS).map(h => \`<a href="\${h.link}" target="_blank" rel="noopener">\${h.title}</a>\`).join(' • ');
+      track.innerHTML = '';
+      track.appendChild(row);
+    }
+
+    async function refreshAll(){
+      try{
+        const [headlines, advisories] = await Promise.all([
+          loadGroup(SOURCES.headlines),
+          loadGroup(SOURCES.advisories)
+        ]);
+        renderList('headlines-list', headlines, MAX_HEADLINES);
+        renderList('advisories-list', advisories, MAX_ADVISORIES);
+        renderTicker(headlines);
+      }catch(e){
+        // Silent fail; keep old content
+      }
+    }
+
+    // Schedule refresh
+    refreshAll();
+    setInterval(refreshAll, REFRESH_MS);
+
+    // ===== Animated grid background =====
+    (function(){
+      const c = document.getElementById('grid-canvas');
+      if(!c) return;
+      const ctx = c.getContext('2d');
+      let w,h,t=0; const DPR = Math.min(window.devicePixelRatio||1,2);
+      function resize(){
+        w = c.width = innerWidth * DPR;
+        h = c.height = innerHeight * DPR;
+        c.style.width = innerWidth+'px'; c.style.height = innerHeight+'px';
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+      }
+      addEventListener('resize', resize); resize();
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        ctx.strokeStyle = 'rgba(0,255,195,0.12)'; ctx.lineWidth = 1;
+        const grid = 36;
+        const ox = Math.sin(t/1200)*12;
+        const oy = Math.cos(t/1400)*12;
+        for(let x = ox; x < innerWidth+grid; x += grid){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,innerHeight); ctx.stroke(); }
+        for(let y = oy; y < innerHeight+grid; y += grid){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(innerWidth,y); ctx.stroke(); }
+        t += 16; requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
 </body>
 </html>
