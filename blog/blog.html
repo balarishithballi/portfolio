@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Cyber Daily — Live Blog</title>
+  <meta name="color-scheme" content="dark" />
   <style>
     :root{
       --bg:#0b0f14; --panel:#0f1624cc; --glass:rgba(20,30,50,0.35);
@@ -56,7 +57,7 @@
   <div class="wrapper">
     <header class="hero glass">
       <h1 class="neon-glitch" data-text="Cyber Daily">Cyber Daily</h1>
-      <p class="deck">cybersecurity headlines and advisories</p>
+      <p class="deck">Auto-updating cybersecurity headlines and advisories — refreshes every 30 minutes. Uses same-origin APIs to avoid CORS/rate limits.</p>
       <div class="ticker glass">
         <span class="label">Live Ticker</span>
         <div id="ticker-track" class="track" aria-live="polite"></div>
@@ -77,32 +78,32 @@
     </section>
 
     <footer class="glass footer">
-      <span>Created by BALARISHITH.BALLI • Sources: The Hacker News, CISA, SecurityWeek, CyberWire</span>
+      <span>Created by BALARISHITH.BALLI • Sources: The Hacker News, SecurityWeek, CyberWire, CISA KEV</span>
     </footer>
   </div>
 
   <div id="toast" class="toast" style="display:none"></div>
 
   <script>
-    // ===== Feed endpoints (with reliable URLs) =====
-    const RSS_RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
-    const RSS_APYHUB = 'https://api.apyhub.com/convert/rss-url-to-json?output=json&url='; // requires apy-token header if rate-limited
-    // Note: Public converters can rate-limit. For production, front a small serverless proxy.
+    // Same-origin endpoints
+    const PROXY = '/api/rss?url=';
+    const KEV = '/api/kev';
 
     const FEEDS = {
       headlines: [
-        'https://feeds.feedburner.com/TheHackersNews', // The Hacker News
-        'https://www.securityweek.com/feed/',          // SecurityWeek
-        'https://www.cyberwire.com/podcasts/daily-podcast.xml' // CyberWire Daily
+        PROXY + encodeURIComponent('https://feeds.feedburner.com/TheHackersNews'),
+        PROXY + encodeURIComponent('https://www.securityweek.com/feed/'),
+        PROXY + encodeURIComponent('https://www.cyberwire.com/podcasts/daily-podcast.xml')
       ],
       advisories: [
-        'https://www.cisa.gov/cybersecurity-advisories/all.xml' // Consolidated CISA feed
+        // Try CISA advisories (if available), then KEV JSON as a stable fallback
+        PROXY + encodeURIComponent('https://www.cisa.gov/cybersecurity-advisories/all.xml'),
+        KEV
       ]
     };
 
     const MAX_HEADLINES = 20, MAX_ADVISORIES = 15, TICKER_ITEMS = 12;
     const REFRESH_MS = 30*60*1000;
-
     const state = { lastUpdated: null };
 
     function showToast(msg){
@@ -112,18 +113,16 @@
       clearTimeout(showToast._timer);
       showToast._timer = setTimeout(()=>{ t.style.display='none' }, 6000);
     }
-
     function setStatus(ok){
       const s = document.getElementById('status');
       const stamp = state.lastUpdated ? new Date(state.lastUpdated).toLocaleString() : '—';
       s.textContent = ok ? \`Last updated: \${stamp}\` : \`Attempting to update… \${stamp}\`;
     }
-
     const sanitize = s => (s || '').replace(/<[^>]*>/g, '').trim();
     function pick(it){
       const title = sanitize(it.title || it.name);
       const link = it.link || it.url || '#';
-      const source = sanitize(it.author || it.feed?.title || it.source?.name || 'Feed');
+      const source = sanitize(it.author || it.feed?.title || it.source || 'Feed');
       const date = it.pubDate || it.publishedAt || it.updated || it.isoDate || '';
       return { title, link, source, date };
     }
@@ -138,31 +137,11 @@
       }catch{ return ''; }
     }
 
-    async function convertVia(url, converter){
-      const endpoint = converter + encodeURIComponent(url);
-      const opts = { cache:'no-store' };
-      // If using APYHUB with a token:
-      // if(converter === RSS_APYHUB) opts.headers = { 'apy-token': 'YOUR_TOKEN' };
-      const r = await fetch(endpoint, opts);
-      if(!r.ok) throw new Error('converter '+converter+' status '+r.status);
-      return r.json();
-    }
-
     async function fetchFeed(url){
-      // Try rss2json first, then ApyHub fallback
-      try{
-        const a = await convertVia(url, RSS_RSS2JSON);
-        if(a && (a.items || a.data?.items)) return a.items || a.data.items;
-        throw new Error('no items');
-      }catch(e1){
-        try{
-          const b = await convertVia(url, RSS_APYHUB);
-          if(b && (b.items || b.data?.items)) return b.items || b.data.items;
-          throw new Error('no items');
-        }catch(e2){
-          throw e2;
-        }
-      }
+      const r = await fetch(url, { cache:'no-store' });
+      if(!r.ok) throw new Error('proxy '+r.status);
+      const j = await r.json();
+      return j.items || [];
     }
 
     async function loadGroup(urls){
@@ -170,13 +149,10 @@
       const res = await Promise.allSettled(urls.map(fetchFeed));
       let hadError = false;
       res.forEach(r=>{
-        if(r.status==='fulfilled'){
-          (r.value||[]).forEach(x=> bag.push(pick(x)));
-        }else{
-          hadError = true;
-        }
+        if(r.status==='fulfilled'){ (r.value||[]).forEach(x=> bag.push(pick(x))); }
+        else { hadError = true; }
       });
-      // dedupe and sort
+      // dedupe + sort
       const seen = new Set();
       const unique = bag.filter(h=>{
         const k = (h.title||'').toLowerCase();
@@ -225,17 +201,15 @@
         state.lastUpdated = Date.now();
         setStatus(true);
         if(hErr || aErr) showToast('Some feeds throttled or unavailable; displayed what was available.');
-        if(headlines.length===0 && advisories.length===0) showToast('No items returned by converters. Public endpoints may be rate-limited. The page will retry.');
       }catch(e){
-        showToast('All converters failed. Will retry automatically.');
+        showToast('All sources failed. Will retry automatically.');
       }
     }
 
-    // Kick off and schedule
     refreshAll();
     setInterval(refreshAll, REFRESH_MS);
 
-    // Subtle animated grid
+    // Animated grid background
     (function(){
       const c = document.getElementById('grid-canvas'); if(!c) return;
       const ctx = c.getContext('2d'); let w,h,t=0; const DPR = Math.min(window.devicePixelRatio||1,2);
