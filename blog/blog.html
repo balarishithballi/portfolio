@@ -12,17 +12,14 @@
     *{box-sizing:border-box} html,body{height:100%}
     body{margin:0; background:#0b0f14; color:var(--text);
       font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; overflow-x:hidden}
-    /* Scanlines + grid */
     body::before{content:""; position:fixed; inset:0; pointer-events:none;
       background:repeating-linear-gradient(180deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px); mix-blend-mode:overlay}
     #grid-canvas{position:fixed; inset:0; z-index:0; opacity:.12}
-    /* Glass containers */
     .glass{background:var(--glass); backdrop-filter: blur(12px) saturate(120%);
       -webkit-backdrop-filter: blur(12px) saturate(120%); border:1px solid rgba(0,255,200,.25); border-radius:14px}
     .wrapper{max-width:1100px; margin:22px auto 40px; padding:0 16px; position:relative; z-index:1}
     .hero{padding:22px 16px; text-align:center; margin-bottom:16px}
     .deck{opacity:.9; margin:8px auto 0; max-width:780px}
-    /* Glitch title */
     .neon-glitch{display:inline-block; font-weight:800; font-size:clamp(32px,6.8vw,78px);
       color:#e9fffb; text-shadow:0 0 10px var(--neon), 0 0 30px var(--neon); position:relative; letter-spacing:.03em}
     .neon-glitch::before,.neon-glitch::after{content:attr(data-text); position:absolute; left:0; top:0; width:100%}
@@ -32,7 +29,6 @@
       clip-path:polygon(0 62%,100% 60%,100% 100%,0 100%); animation:glBot 3.4s infinite linear alternate}
     @keyframes glTop{0%{transform:translate(0,0)}50%{transform:translate(1px,-1px)}100%{transform:translate(-1px,1px)}}
     @keyframes glBot{0%{transform:translate(0,0)}50%{transform:translate(-1px,1px)}100%{transform:translate(1px,-1px)}}
-    /* Ticker */
     .ticker{margin:12px auto 0; display:flex; align-items:center; gap:12px; padding:10px 14px; position:sticky; top:10px; z-index:5}
     .ticker .label{color:var(--neon); font-weight:700; text-transform:uppercase; letter-spacing:.08em}
     .ticker .track{overflow:hidden; white-space:nowrap; flex:1; position:relative}
@@ -40,7 +36,6 @@
     .ticker a{color:var(--text); text-decoration:none; margin:0 18px}
     .ticker a:hover{color:var(--neon)}
     @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-100%)}}
-    /* Grid layout */
     .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:24px; margin-top:16px}
     @media (max-width:960px){.grid{grid-template-columns:1fr}}
     .card{padding:22px}
@@ -50,6 +45,8 @@
     .item a{color:var(--neon); text-decoration:none}
     .meta{font-size:12px; opacity:.75}
     .footer{margin:26px auto 40px; padding:16px; text-align:center}
+    .status{font-size:12px; opacity:.8; margin-top:8px}
+    .toast{position:fixed; right:12px; bottom:12px; background:#1a2434; color:#cee9ff; border:1px solid rgba(255,255,255,.2); padding:10px 12px; border-radius:10px; max-width:320px}
     a:focus,button:focus{outline:2px solid var(--neon2); outline-offset:2px}
   </style>
 </head>
@@ -59,11 +56,12 @@
   <div class="wrapper">
     <header class="hero glass">
       <h1 class="neon-glitch" data-text="Cyber Daily">Cyber Daily</h1>
-      <p class="deck">Auto-updating cybersecurity headlines, advisories, and key stories — refreshed every 30 minutes.</p>
+      <p class="deck">cybersecurity headlines and advisories</p>
       <div class="ticker glass">
         <span class="label">Live Ticker</span>
         <div id="ticker-track" class="track" aria-live="polite"></div>
       </div>
+      <div id="status" class="status"></div>
     </header>
 
     <section class="grid">
@@ -83,33 +81,50 @@
     </footer>
   </div>
 
+  <div id="toast" class="toast" style="display:none"></div>
+
   <script>
-    // ===== Config: RSS feeds through RSS->JSON services =====
-    // Public services can rate-limit. For production, use a serverless proxy or NewsAPI/NVD backend.
-    const RSS_TO_JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
-    const SOURCES = {
+    // ===== Feed endpoints (with reliable URLs) =====
+    const RSS_RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+    const RSS_APYHUB = 'https://api.apyhub.com/convert/rss-url-to-json?output=json&url='; // requires apy-token header if rate-limited
+    // Note: Public converters can rate-limit. For production, front a small serverless proxy.
+
+    const FEEDS = {
       headlines: [
-        RSS_TO_JSON + encodeURIComponent('https://feeds.feedburner.com/TheHackersNews'), // The Hacker News
-        RSS_TO_JSON + encodeURIComponent('https://www.securityweek.com/feed/'),         // SecurityWeek
-        RSS_TO_JSON + encodeURIComponent('https://www.cyberwire.com/podcasts/daily-podcast.xml') // CyberWire daily
+        'https://feeds.feedburner.com/TheHackersNews', // The Hacker News
+        'https://www.securityweek.com/feed/',          // SecurityWeek
+        'https://www.cyberwire.com/podcasts/daily-podcast.xml' // CyberWire Daily
       ],
       advisories: [
-        RSS_TO_JSON + encodeURIComponent('https://www.cisa.gov/cybersecurity-advisories.xml') // CISA advisories
+        'https://www.cisa.gov/cybersecurity-advisories/all.xml' // Consolidated CISA feed
       ]
     };
 
-    const REFRESH_MS = 30 * 60 * 1000; // 30 minutes
-    const MAX_HEADLINES = 20;
-    const MAX_ADVISORIES = 15;
-    const TICKER_ITEMS = 12;
+    const MAX_HEADLINES = 20, MAX_ADVISORIES = 15, TICKER_ITEMS = 12;
+    const REFRESH_MS = 30*60*1000;
 
-    // ===== Utilities =====
+    const state = { lastUpdated: null };
+
+    function showToast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(()=>{ t.style.display='none' }, 6000);
+    }
+
+    function setStatus(ok){
+      const s = document.getElementById('status');
+      const stamp = state.lastUpdated ? new Date(state.lastUpdated).toLocaleString() : '—';
+      s.textContent = ok ? \`Last updated: \${stamp}\` : \`Attempting to update… \${stamp}\`;
+    }
+
     const sanitize = s => (s || '').replace(/<[^>]*>/g, '').trim();
-    function pick(item){
-      const title = sanitize(item.title || item.name);
-      const link = item.link || item.url || '#';
-      const source = sanitize(item.author || item.feed?.title || item.source?.name || 'Feed');
-      const date = item.pubDate || item.publishedAt || item.updated || item.isoDate || '';
+    function pick(it){
+      const title = sanitize(it.title || it.name);
+      const link = it.link || it.url || '#';
+      const source = sanitize(it.author || it.feed?.title || it.source?.name || 'Feed');
+      const date = it.pubDate || it.publishedAt || it.updated || it.isoDate || '';
       return { title, link, source, date };
     }
     function relativeTime(ts){
@@ -123,99 +138,114 @@
       }catch{ return ''; }
     }
 
-    // ===== Fetch helpers =====
-    async function fetchFeed(url){
-      const r = await fetch(url, { cache: 'no-store' });
-      if(!r.ok) throw new Error('feed '+r.status);
+    async function convertVia(url, converter){
+      const endpoint = converter + encodeURIComponent(url);
+      const opts = { cache:'no-store' };
+      // If using APYHUB with a token:
+      // if(converter === RSS_APYHUB) opts.headers = { 'apy-token': 'YOUR_TOKEN' };
+      const r = await fetch(endpoint, opts);
+      if(!r.ok) throw new Error('converter '+converter+' status '+r.status);
       return r.json();
     }
-    async function loadGroup(urls){
-      const out = [];
-      const res = await Promise.allSettled(urls.map(fetchFeed));
-      res.forEach(x=>{
-        if(x.status === 'fulfilled'){
-          const items = x.value.items || [];
-          items.forEach(it => out.push(pick(it)));
+
+    async function fetchFeed(url){
+      // Try rss2json first, then ApyHub fallback
+      try{
+        const a = await convertVia(url, RSS_RSS2JSON);
+        if(a && (a.items || a.data?.items)) return a.items || a.data.items;
+        throw new Error('no items');
+      }catch(e1){
+        try{
+          const b = await convertVia(url, RSS_APYHUB);
+          if(b && (b.items || b.data?.items)) return b.items || b.data.items;
+          throw new Error('no items');
+        }catch(e2){
+          throw e2;
         }
-      });
-      // de-duplicate by title
-      const seen = new Set();
-      const unique = out.filter(h=>{
-        const k = h.title.toLowerCase();
-        if(seen.has(k)) return false;
-        seen.add(k); return true;
-      });
-      // sort desc by date
-      unique.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
-      return unique;
+      }
     }
 
-    // ===== Renderers =====
-    function renderList(elId, items, limit){
-      const el = document.getElementById(elId);
-      if(!el) return;
+    async function loadGroup(urls){
+      const bag = [];
+      const res = await Promise.allSettled(urls.map(fetchFeed));
+      let hadError = false;
+      res.forEach(r=>{
+        if(r.status==='fulfilled'){
+          (r.value||[]).forEach(x=> bag.push(pick(x)));
+        }else{
+          hadError = true;
+        }
+      });
+      // dedupe and sort
+      const seen = new Set();
+      const unique = bag.filter(h=>{
+        const k = (h.title||'').toLowerCase();
+        if(seen.has(k)) return false; seen.add(k); return true;
+      }).sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
+      return { items: unique, hadError };
+    }
+
+    function renderList(id, items, limit){
+      const el = document.getElementById(id); if(!el) return;
       el.innerHTML = '';
       items.slice(0,limit).forEach(h=>{
         const li = document.createElement('li');
-        li.className = 'item';
+        li.className='item';
         li.innerHTML = \`
           <a href="\${h.link}" target="_blank" rel="noopener">\${h.title}</a>
-          <div class="meta">\${h.source} • \${relativeTime(h.date)}</div>
-        \`;
+          <div class="meta">\${h.source} • \${relativeTime(h.date)}</div>\`;
         el.appendChild(li);
       });
+      if(items.length===0){
+        const li = document.createElement('li');
+        li.className='item';
+        li.textContent = 'No items right now. Retrying shortly…';
+        el.appendChild(li);
+      }
     }
+
     function renderTicker(items){
-      const track = document.getElementById('ticker-track');
-      if(!track) return;
+      const track = document.getElementById('ticker-track'); if(!track) return;
       const row = document.createElement('div');
-      row.className = 'row';
-      row.innerHTML = items.slice(0,TICKER_ITEMS).map(h => \`<a href="\${h.link}" target="_blank" rel="noopener">\${h.title}</a>\`).join(' • ');
-      track.innerHTML = '';
-      track.appendChild(row);
+      row.className='row';
+      row.innerHTML = items.slice(0,TICKER_ITEMS).map(h=>\`<a href="\${h.link}" target="_blank" rel="noopener">\${h.title}</a>\`).join(' • ');
+      track.innerHTML=''; track.appendChild(row);
     }
 
     async function refreshAll(){
+      setStatus(false);
       try{
-        const [headlines, advisories] = await Promise.all([
-          loadGroup(SOURCES.headlines),
-          loadGroup(SOURCES.advisories)
+        const [{items:headlines, hadError:hErr}, {items:advisories, hadError:aErr}] = await Promise.all([
+          loadGroup(FEEDS.headlines),
+          loadGroup(FEEDS.advisories)
         ]);
         renderList('headlines-list', headlines, MAX_HEADLINES);
         renderList('advisories-list', advisories, MAX_ADVISORIES);
         renderTicker(headlines);
+        state.lastUpdated = Date.now();
+        setStatus(true);
+        if(hErr || aErr) showToast('Some feeds throttled or unavailable; displayed what was available.');
+        if(headlines.length===0 && advisories.length===0) showToast('No items returned by converters. Public endpoints may be rate-limited. The page will retry.');
       }catch(e){
-        // Silent fail; keep old content
+        showToast('All converters failed. Will retry automatically.');
       }
     }
 
-    // Schedule refresh
+    // Kick off and schedule
     refreshAll();
     setInterval(refreshAll, REFRESH_MS);
 
-    // ===== Animated grid background =====
+    // Subtle animated grid
     (function(){
-      const c = document.getElementById('grid-canvas');
-      if(!c) return;
-      const ctx = c.getContext('2d');
-      let w,h,t=0; const DPR = Math.min(window.devicePixelRatio||1,2);
-      function resize(){
-        w = c.width = innerWidth * DPR;
-        h = c.height = innerHeight * DPR;
-        c.style.width = innerWidth+'px'; c.style.height = innerHeight+'px';
-        ctx.setTransform(DPR,0,0,DPR,0,0);
-      }
-      addEventListener('resize', resize); resize();
-      function draw(){
-        ctx.clearRect(0,0,w,h);
-        ctx.strokeStyle = 'rgba(0,255,195,0.12)'; ctx.lineWidth = 1;
-        const grid = 36;
-        const ox = Math.sin(t/1200)*12;
-        const oy = Math.cos(t/1400)*12;
-        for(let x = ox; x < innerWidth+grid; x += grid){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,innerHeight); ctx.stroke(); }
-        for(let y = oy; y < innerHeight+grid; y += grid){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(innerWidth,y); ctx.stroke(); }
-        t += 16; requestAnimationFrame(draw);
-      }
+      const c = document.getElementById('grid-canvas'); if(!c) return;
+      const ctx = c.getContext('2d'); let w,h,t=0; const DPR = Math.min(window.devicePixelRatio||1,2);
+      function resize(){ w=c.width=innerWidth*DPR; h=c.height=innerHeight*DPR; c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
+      addEventListener('resize',resize); resize();
+      function draw(){ ctx.clearRect(0,0,w,h); ctx.strokeStyle='rgba(0,255,195,0.12)'; ctx.lineWidth=1;
+        const grid=36, ox=Math.sin(t/1200)*12, oy=Math.cos(t/1400)*12;
+        for(let x=ox; x<innerWidth+grid; x+=grid){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,innerHeight); ctx.stroke(); }
+        for(let y=oy; y<innerHeight+grid; y+=grid){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(innerWidth,y); ctx.stroke(); }
+        t+=16; requestAnimationFrame(draw); }
       draw();
     })();
   </script>
