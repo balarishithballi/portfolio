@@ -90,7 +90,8 @@
       <section class="card glow">
         <h3>Getting started</h3>
         <pre>Try using EXIFTOOL 
-OR Try using LSB steganography</pre>
+OR Try using LSB steganography
+try steghide its the easiest!!!</pre>
         <p class="muted">Then try the usual technique suitable for this format.</p>
       </section>
     </aside>
@@ -103,15 +104,12 @@ OR Try using LSB steganography</pre>
   <script>
     const hint=document.getElementById('hint');
     const unlock=document.getElementById('unlock');
-    const timer=document.getElementById('timer');
-    setTimeout(()=>{
-      timer.style.display='none';
-      unlock.style.display='inline-block';
-    },90000);
+    unlock.style.display='inline-block';
     unlock?.addEventListener('click',()=>{
       hint.style.display='block';
       unlock.style.display='none';
     });
+
 
     const form=document.getElementById('flag-form');
     const result=document.getElementById('result');
