@@ -1,5 +1,5 @@
 function openDocument(){
-  window.open('/assets/INFILTR8.pdf', '_blank');
+  window.open('/blog/INFILTR8.pdf', '_blank');
 }
 
 // Smooth scroll for navbar
@@ -70,3 +70,4 @@ window.addEventListener('load', ()=>{
     el.style.animation = '';
   });
 });
+
