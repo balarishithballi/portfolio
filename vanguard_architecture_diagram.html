@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanguard SIEM Architecture Diagram</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 20px;
+        }
+        .stage {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .stage h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .component {
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 0.95em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .component:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .input { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .process { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .storage { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .output { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .arrow {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .description {
+            background: white;
+            padding: 12px;
+            border-left: 4px solid #667eea;
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #555;
+            border-radius: 4px;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .metric-card h3 {
+            color: #333;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        .metric-card .value {
+            color: #e74c3c;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+        }
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔰 Vanguard SIEM ML Platform</h1>
+        <p class="subtitle">Enterprise Threat Detection & Risk Scoring Architecture</p>
+
+        <div class="diagram">
+            <!-- STAGE 1: INGESTION -->
+            <div class="stage">
+                <h2>📥 Stage 1: Data Ingestion & Normalization</h2>
+                <div class="components">
+                    <div class="component input">SIEM Event Feeds<br>(Firewall, Auth, App Logs)</div>
+                    <div class="component process">Log Parser<br>(Format standardization)</div>
+                    <div class="component process">Data Cleaner<br>(Enrich + GT labeling)</div>
+                    <div class="component storage">Cleaned Logs<br>(JSONL)</div>
+                </div>
+                <div class="description">
+                    ✓ Ingest 100K+ events/day from heterogeneous sources
+                    ✓ Normalize 10+ log formats (syslog, Windows, cloud APIs)
+                    ✓ Extract 50+ base features (IPs, ports, users, severity)
+                    ✓ Apply ground-truth labels for supervised learning
+                </div>
+            </div>
+
+            <div class="arrow">⬇️</div>
+
+            <!-- STAGE 2: FEATURE ENGINEERING -->
+            <div class="stage">
+                <h2>⚙️ Stage 2: Feature Engineering (Time-Aware + UEBA)</h2>
+                <div class="components">
+                    <div class="component process">Time-Aware Features<br>(Hour, Day, Weekend, Off-hours)</div>
+                    <div class="component process">UEBA Baseline<br>(Per-user/host density)</div>
+                    <div class="component process">Text Embeddings<br>(HashingVectorizer 2^15)</div>
+                    <div class="component storage">Hybrid Features<br>(CSV + Sparse Matrix)</div>
+                </div>
+                <div class="description">
+                    ✓ Time-of-day features capture business hour anomalies
+                    ✓ UEBA burst detection identifies off-hours spikes
+                    ✓ Text embeddings preserve raw log semantics
+                    ✓ Output: 154K rows × 50K+ features (sparse)
+                </div>
+            </div>
+
+            <div class="arrow">⬇️</div>
+
+            <!-- STAGE 3: ML + RISK -->
+            <div class="stage">
+                <h2>🤖 Stage 3: ML Inference & Risk Scoring</h2>
+                <div class="components">
+                    <div class="component process">CatBoost Classifier<br>(Threat/Benign)</div>
+                    <div class="component process">Isolation Forest<br>(Anomaly Detection)</div>
+                    <div class="component process">Risk Fusion Engine<br>(Multi-factor scoring)</div>
+                    <div class="component storage">Predictions + Scores<br>(Risk 0-100)</div>
+                </div>
+                <div class="description">
+                    ✓ CatBoost: 98.3% accuracy, 96.2% recall on pilot data
+                    ✓ Isolation Forest: Unsupervised UEBA anomaly magnitude
+                    ✓ Risk Fusion: Model confidence (1.3×) + UEBA (1.1×) + Threat Intel (1.5×) + Vuln (0.9×) + Lateral (0.75×)
+                    ✓ Output: Sigmoid-normalized 0-100 risk scores
+                </div>
+            </div>
+
+            <div class="arrow">⬇️</div>
+
+            <!-- STAGE 4: EXPLAINABILITY -->
+            <div class="stage">
+                <h2>🧠 Stage 4: Explainability & Feature Importance</h2>
+                <div class="components">
+                    <div class="component process">SHAP Explainer<br>(Feature impact per prediction)</div>
+                    <div class="component process">Waterfall Plots<br>(Visual attribution)</div>
+                    <div class="component storage">SHAP Values<br>(Base value + feature vectors)</div>
+                </div>
+                <div class="description">
+                    ✓ SHAP TreeExplainer for CatBoost models
+                    ✓ Per-event feature importance breakdown
+                    ✓ Trust-building for analyst acceptance
+                    ✓ Audit trail for compliance & forensics
+                </div>
+            </div>
+
+            <div class="arrow">⬇️</div>
+
+            <!-- STAGE 5: OUTPUT -->
+            <div class="stage">
+                <h2>📊 Stage 5: Presentation & Storage</h2>
+                <div class="components">
+                    <div class="component storage">Final Data CSV<br>(154K × 80 cols)</div>
+                    <div class="component output">SQL Database<br>(SQLite/Postgres/MySQL)</div>
+                    <div class="component output">Streamlit Dashboard<br>(Real-time visualization)</div>
+                    <div class="component output">Metrics Report<br>(JSON KPIs)</div>
+                </div>
+                <div class="description">
+                    ✓ SQL: Long-term retention, complex queries, compliance audits
+                    ✓ Dashboard: Real-time KPIs, event explorer, UEBA heatmaps
+                    ✓ Metrics: Accuracy, precision, recall, F1, ROC-AUC
+                    ✓ Supports 500K+/day at production scale
+                </div>
+            </div>
+
+            <!-- METRICS -->
+            <div style="margin-top: 40px;">
+                <h2 style="margin-bottom: 20px;">📈 Pilot Results (154,332 Events)</h2>
+                <div class="metrics">
+                    <div class="metric-card">
+                        <h3>Model Accuracy</h3>
+                        <div class="value">98.3%</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Precision</h3>
+                        <div class="value">98.1%</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Recall</h3>
+                        <div class="value">96.2%</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>ROC-AUC</h3>
+                        <div class="value">0.996</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Model Alerts</h3>
+                        <div class="value">20,230</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>UEBA Anomalies</h3>
+                        <div class="value">2,636</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Avg Risk Score</h3>
+                        <div class="value">71.37</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Processing Time</h3>
+                        <div class="value">&lt;2 sec/1K</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEGEND -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color input"></div>
+                    <span><strong>Input:</strong> Raw data sources</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color process"></div>
+                    <span><strong>Processing:</strong> Active computation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color storage"></div>
+                    <span><strong>Storage:</strong> Persistent data</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color output"></div>
+                    <span><strong>Output:</strong> User-facing results</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
